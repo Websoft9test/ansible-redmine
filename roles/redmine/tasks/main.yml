@@ -27,8 +27,8 @@
     src: database.yml
     dest: /data/wwwroot/redmine/config
 
-#- name: Additional dependencies
-#  copy: src=Gemfile.local dest=/data/wwwroot/redmine/
+- name: Additional dependencies
+  copy: src=Gemfile.local dest=/data/wwwroot/redmine/
 
 - name: Install dependencies by RedHat
   shell: yum install mysql-devel -y
