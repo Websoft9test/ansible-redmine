@@ -28,10 +28,8 @@
 
 - name: Rename and Remove warning messages
   shell: |
-    mv redmine-*  redmine
-    sed -i 's/ruby.*Bundler.*/#&/g' Gemfile
-  args:
-    chdir: /data/wwwroot
+    mv redmine-*  /data/wwwroot/redmine
+    sed -i 's/ruby.*Bundler.*/#&/g' /data/wwwroot/redmine/Gemfile
  
 - name: Set databases config
   copy: 
