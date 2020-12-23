@@ -28,7 +28,7 @@
 
 - name: Rename and Remove warning messages
   shell: |
-    mv redmine-*  /data/wwwroot/redmine
+    cd /data/wwwroot; mv redmine-* redmine
     sed -i 's/ruby.*Bundler.*/#&/g' /data/wwwroot/redmine/Gemfile
  
 - name: Set databases config
@@ -75,7 +75,7 @@
 
 - name: Set redmine service
   template:
-    src: redmine.service
+    src: redmine.service.jinja2
     dest: /lib/systemd/system/redmine.service
   
 - name: Start and enable redmine
