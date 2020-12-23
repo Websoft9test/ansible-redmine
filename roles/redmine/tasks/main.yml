@@ -1,8 +1,6 @@
 ---
-- name: Install requirements
-  apt:
-    name: [libxml2-dev,libmysqlclient-dev,libssl-dev]
-  when: ansible_os_family == "Debian"
+- name: Install this role on {{ansible_os_family}}
+  include: "{{ansible_os_family}}.yml"
 
 - name: Add redmine User
   user:
@@ -20,8 +18,21 @@
     owner: redmine
     group: redmine
 
-- shell: mv /data/wwwroot/redmine-*  /data/wwwroot/redmine
+- name: Get ruby version dir_name
+  shell: ls /usr/local/rvm/rubies |grep ruby
+  register: ruby_dir_name
 
+- name: Get redmine version 
+  shell: ls /data/wwwroot/ |grep redmine |cut -d- -f 2
+  register: redmine_version
+
+- name: Rename and Remove warning messages
+  shell: |
+    mv redmine-*  redmine
+    sed -i 's/ruby.*Bundler.*/#&/g' Gemfile
+  args:
+    chdir: /data/wwwroot
+ 
 - name: set databases config
   copy: 
     src: database.yml
@@ -29,10 +40,6 @@
 
 - name: Additional dependencies
   copy: src=Gemfile.local dest=/data/wwwroot/redmine/
-
-- name: Install dependencies by RedHat
-  shell: yum install mysql-devel -y
-  when: ansible_os_family == "RedHat"
     
 - name: bundler install required
   bundler:
@@ -69,7 +76,7 @@
     - public/plugin_assets
 
 - name: set redmine service
-  copy:
+  template:
     src: redmine.service
     dest: /lib/systemd/system/redmine.service
   
@@ -83,3 +90,14 @@
     group: redmine
     state: directory
     recurse: yes
+
+# Check version
+- block:
+  - name: Check redmine Version
+    shell: sudo echo "redmine version:" "{{redmine_version.stdout}}" | sudo tee -a /data/logs/install_version.txt
+
+# check service state
+  - name: Check redmine Service
+    shell: systemctl status redmine | grep Active*
+    register: check_redmine_service
+    notify: check_redmine_service

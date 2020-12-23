@@ -1,0 +1,3 @@
+- name: Install dependencies by RedHat
+  yum: 
+    name: mysql-devel
