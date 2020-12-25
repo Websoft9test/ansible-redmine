@@ -1,18 +1,10 @@
 [Unit]
 Description=Redmine
-After=nginx.service
 [Service]
 Environment=RAILS_ENV=production
-Environment=PATH=/usr/local/rvm/gems/{{ruby_dir_name.stdout}}/bin:/usr/local/rvm/gems{{ruby_dir_name.stdout}}@global/bin:/usr/local/rvm/rubies/{{ruby_dir_name.stdout}}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/usr/local/rvm/bin
-
 Type=simple
 WorkingDirectory=/data/wwwroot/redmine
-{% if ansible_os_family == "RedHat" %}
-ExecStart=/usr/local/rvm/gems/{{ruby_dir_name.stdout}}/bin/puma -b tcp://127.0.0.1:9292 -e production 
-{% endif %}
-{% if ansible_os_family == "Debian" %}
-ExecStart=/usr/local/rvm/rubies/{{ruby_dir_name.stdout}}/bin/puma -b tcp://127.0.0.1:9292 -e production 
-{% endif %}
+ExecStart=/bin/bash -c 'source /etc/profile.d/rvm.sh;puma -b tcp://127.0.0.1:9292 -e production' 
 User=redmine
 [Install]
 WantedBy=multi-user.target

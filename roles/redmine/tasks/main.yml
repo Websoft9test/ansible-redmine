@@ -18,18 +18,14 @@
     owner: redmine
     group: redmine
 
-- name: Get ruby version dir_name
-  shell: ls /usr/local/rvm/rubies |grep ruby
-  register: ruby_dir_name
-
 - name: Get redmine version 
   shell: ls /data/wwwroot/ |grep redmine |cut -d- -f 2
   register: redmine_version
 
-- name: Rename and Remove warning messages
+- name: Rename redmine dir and Clear warning
   shell: |
     cd /data/wwwroot; mv redmine-* redmine
-    sed -i 's/ruby.*Bundler.*/#&/g' /data/wwwroot/redmine/Gemfile
+    rvm rvmrc warning ignore allGemfiles
  
 - name: Set databases config
   copy: 
