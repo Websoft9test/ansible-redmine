@@ -25,7 +25,7 @@
 - name: Rename redmine dir and Clear warning
   shell: |
     cd /data/wwwroot; mv redmine-* redmine
-    rvm rvmrc warning ignore allGemfiles
+    /usr/local/rvm/bin/rvm rvmrc warning ignore allGemfiles
  
 - name: Set databases config
   copy: 
