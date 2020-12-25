@@ -1,5 +1,7 @@
 [Unit]
 Description=Redmine
+After=nginx mysql 
+
 [Service]
 Environment=RAILS_ENV=production
 Type=simple
