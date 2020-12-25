@@ -70,8 +70,8 @@
     - public/plugin_assets
 
 - name: Set redmine service
-  template:
-    src: redmine.service.jinja2
+  copy:
+    src: redmine.service
     dest: /lib/systemd/system/redmine.service
   
 - name: Start and enable redmine
